@@ -1,12 +1,12 @@
 # App-Owns-Data Hello World Sample
-The minimal sample application to embed either a standard Power BI report or a paginated report
+This is a minimal .NET5 sample application to embed either a standard Power BI report or a paginated report.
 
 
 ### Power BI Public Cloud
-'''Javascript
+```Javascript
 "PowerBiServiceApiRoot": "https://api.powerbi.com/",
 "PowerBiServiceApiResourceId": "https://analysis.windows.net/powerbi/api",
-'''
+```
 
 ## Power BI GCC Cloud
 '''Javascript
