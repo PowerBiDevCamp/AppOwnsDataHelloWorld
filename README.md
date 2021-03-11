@@ -1,6 +1,38 @@
 # App-Owns-Data Hello World Sample
-This is a minimal .NET5 sample application to embed either a standard Power BI report or a paginated report.
+This is a minimal .NET5 sample application to embed either a standard Power BI report or a paginated report. 
+You must install the .NET5 SDK before you run this sample. 
+You should be able run and test the sample in either Visual Studio Code or Visual Studio 2019.
+The only file you need to update is *appSettings.json* which initially looks like this. 
 
+```javascript
+{
+  "AzureAd": {
+    "Instance": "https://login.microsoftonline.com/",
+    "Domain": "YOUR_TENANT_NAME",
+    "TenantId": "YOUR_TENANT_ID",
+    "ClientId": "YOUR_CLIENT_ID",
+    "ClientSecret": "YOUR_CLIENT_SECRET",
+
+  },
+  "PowerBi": {
+    "PowerBiServiceApiRoot": "https://api.powerbi.com/",
+    "PowerBiServiceApiResourceId": "https://analysis.windows.net/powerbi/api",
+    "WorkspaceId": "YOUR_WORKSPACE_ID",
+    "ReportId": "YOUR_REPORT_ID"
+},
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*"
+}
+```
+The default settings for *PowerBiServiceApiRoot* and *PowerBiServiceApiResourceId* are configured to the Power BI Public Cloud.
+If you are using Power BI embedding in a different cloud, the settings for *PowerBiServiceApiRoot* and *PowerBiServiceApiResourceId* 
+must be updated according to the cloud-specific values shown below.
 
 ### Power BI Public Cloud
 ```Javascript
