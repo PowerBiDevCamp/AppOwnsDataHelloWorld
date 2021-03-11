@@ -2,7 +2,7 @@
 This is a minimal .NET5 sample application to embed either a standard Power BI report or a paginated report. 
 You must install the .NET5 SDK before you run this sample. 
 You should be able run and test the sample in either Visual Studio Code or Visual Studio 2019.
-The only file you need to update is *appSettings.json* which initially looks like this. 
+The only file you need to update is _appSettings.json_ which initially looks like this. 
 
 ```javascript
 {
