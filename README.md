@@ -65,7 +65,7 @@ must be updated according to the cloud-specific values shown below.
 ```
 
 ### Power BI Chinese Cloud
-'''Javascript
+```Javascript
 "PowerBiServiceApiRoot": "https://api.powerbi.cn/",
 "PowerBiServiceApiResourceId": "https://analysis.chinacloudapi.cn/powerbi/api",
 ```
