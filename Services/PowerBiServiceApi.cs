@@ -12,8 +12,6 @@ namespace AppOwnsData.Services {
 
   public class PowerBiServiceApi {
 
-    //public const string powerbiDefaultScope = "https://analysis.windows.net/powerbi/api/.default";
-
     private ITokenAcquisition tokenAcquisition { get; }
     private Guid workspaceId { get; }
     private Guid reportId { get; }
