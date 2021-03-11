@@ -9,25 +9,25 @@ This is a minimal .NET5 sample application to embed either a standard Power BI r
 ```
 
 ## Power BI GCC Cloud
-'''Javascript
+```Javascript
 "PowerBiServiceApiRoot": "https://api.powerbigov.us/",
 "PowerBiServiceApiResourceId": "https://analysis.usgovcloudapi.net/powerbi/api",
 ```
 
 ### Power BI DoDCON Cloud
-'''Javascript
+```Javascript
 "PowerBiServiceApiRoot": "https://api.high.powerbigov.us/",
 "PowerBiServiceApiResourceId": "https://high.analysis.usgovcloudapi.net/powerbi/api",
 ```
 
 ### Power BI DoD Cloud
-'''Javascript
+```Javascript
 "PowerBiServiceApiRoot": "https://api.mil.powerbigov.us/",
 "PowerBiServiceApiResourceId": "https://mil.analysis.usgovcloudapi.net/powerbi/api",
 ```
 
 ### Power BI German Cloud
-'''Javascript
+```Javascript
 "PowerBiServiceApiRoot": "https://api.powerbi.de/",
 "PowerBiServiceApiResourceId": "https://analysis.cloudapi.de/powerbi/api",
 ```
