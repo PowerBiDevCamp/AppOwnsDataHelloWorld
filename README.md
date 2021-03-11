@@ -31,7 +31,7 @@ The only file you need to update is **appSettings.json** which initially looks l
 }
 ```
 
-The default settings for **PowerBiServiceApiRoot** and **PowerBiServiceApiResourceId** are configured to the Power BI Public Cloud.
+The default settings for **PowerBiServiceApiRoot** and **PowerBiServiceApiResourceId** are configured to use the Power BI Public Cloud.
 If you are using Power BI embedding in a different cloud, the settings for *PowerBiServiceApiRoot* and *PowerBiServiceApiResourceId* 
 must be updated according to the cloud-specific values shown below.
 
