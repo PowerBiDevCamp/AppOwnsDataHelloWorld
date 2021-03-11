@@ -1,0 +1,29 @@
+﻿@model AppOwnsData.Models.ReportEmbedData
+
+  <div class="container">
+
+    <div class="row">
+      <header>
+        <h1>App-Owns-Data Embedding</h1>
+      </header>
+    </div>
+
+    <div class="row">
+      <div id="report-container" ></div>
+    </div>
+
+  </div>
+
+<script src="lib/jquery/dist/jquery.min.js"></script>
+<script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="lib/powerbi-client/dist/powerbi.min.js"></script>
+
+<script>
+    var ReportEmbedData = {
+          ReportId: "@Model.ReportId",
+          EmbedUrl: "@Model.EmbedUrl",
+          EmbedToken: "@Model.Token"
+    };
+</script>
+
+<script src="js/index.js"></script>
