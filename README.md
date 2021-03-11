@@ -3,8 +3,10 @@ The minimal sample application to embed either a standard Power BI report or a p
 
 
 ## Power BI Public Cloud
+'''Javascript
 "PowerBiServiceApiRoot": "https://api.powerbi.com/",
 "PowerBiServiceApiResourceId": "https://analysis.windows.net/powerbi/api",
+'''
 
 ## Power BI GCC Cloud
 "PowerBiServiceApiRoot": "https://api.powerbigov.us/",
