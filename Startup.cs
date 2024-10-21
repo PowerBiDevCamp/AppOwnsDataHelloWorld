@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Identity.Web;
 using AppOwnsData.Services;
 
 namespace AppOwnsData {
@@ -17,15 +16,6 @@ namespace AppOwnsData {
     public IConfiguration Configuration { get; }
 
     public void ConfigureServices(IServiceCollection services) {
-
-      string[] scopes = new string[] {
-        Configuration["PowerBi:PowerBiServiceApiResourceId"] + "/.default"
-      };
-
-      services
-        .AddMicrosoftIdentityWebAppAuthentication(Configuration)
-        .EnableTokenAcquisitionToCallDownstreamApi(scopes)
-        .AddInMemoryTokenCaches();
 
       services.AddScoped(typeof(PowerBiServiceApi));
 

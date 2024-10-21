@@ -2,39 +2,54 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Identity.Web;
 using Microsoft.PowerBI.Api;
 using Microsoft.PowerBI.Api.Models;
 using Microsoft.Rest;
 using AppOwnsData.Models;
+using Microsoft.Identity.Client;
 
 namespace AppOwnsData.Services {
 
   public class PowerBiServiceApi {
 
-    private ITokenAcquisition tokenAcquisition { get; }
+    private Guid tenantId { get; }
+    private string clientId { get; }
+    private string clientSecret { get; }
     private Guid workspaceId { get; }
     private Guid reportId { get; }
     private string powerbiServiceApiRoot { get; }
     private string powerBiServiceApiResourceId { get; }
-    public string powerbiDefaultScope { get; }
+    public string[] powerbiDefaultScope { get; }
 
-    public PowerBiServiceApi(IConfiguration configuration, ITokenAcquisition tokenAcquisition) {
+    public PowerBiServiceApi(IConfiguration configuration) {
 
-      // get configuration settings
-      this.powerbiServiceApiRoot = configuration["PowerBi:PowerBiServiceApiRoot"];
-      this.powerBiServiceApiResourceId = configuration["PowerBi:PowerBiServiceApiResourceId"];
-      this.powerbiDefaultScope = this.powerBiServiceApiResourceId + "/.default";
+      this.tenantId = Guid.Parse(configuration["AzureAd:TenantId"]);
+      this.clientId = configuration["AzureAd:ClientId"];
+      this.clientSecret = configuration["AzureAd:ClientSecret"];
       this.workspaceId = Guid.Parse(configuration["PowerBi:workspaceId"]);
       this.reportId = Guid.Parse(configuration["PowerBi:reportId"]);
 
-      // get reference to token acquisition service
-      this.tokenAcquisition = tokenAcquisition;
+      this.powerbiServiceApiRoot = configuration["PowerBi:PowerBiServiceApiRoot"];
+      this.powerBiServiceApiResourceId = configuration["PowerBi:PowerBiServiceApiResourceId"];
+      this.powerbiDefaultScope = new string[] { this.powerBiServiceApiResourceId + "/.default" };
+
     }
 
     public string GetAppOnlyAccessToken() {
-      return this.tokenAcquisition.GetAccessTokenForAppAsync(powerbiDefaultScope).Result;
+
+      string tenantSpecificAuthority = "https://login.microsoftonline.com/" + tenantId;
+
+      var appConfidential =
+          ConfidentialClientApplicationBuilder.Create(clientId)
+            .WithClientSecret(clientSecret)
+            .WithAuthority(tenantSpecificAuthority)
+            .Build();
+
+      var authResult = appConfidential.AcquireTokenForClient(powerbiDefaultScope).ExecuteAsync().Result;
+      return authResult.AccessToken;
+
     }
+
 
     public PowerBIClient GetPowerBiClient() {
       var tokenCredentials = new TokenCredentials(GetAppOnlyAccessToken(), "Bearer");
