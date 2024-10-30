@@ -7,6 +7,7 @@ using Microsoft.PowerBI.Api.Models;
 using Microsoft.Rest;
 using AppOwnsData.Models;
 using Microsoft.Identity.Client;
+using System.Data;
 
 namespace AppOwnsData.Services {
 
@@ -26,13 +27,13 @@ namespace AppOwnsData.Services {
       this.tenantId = Guid.Parse(configuration["AzureAd:TenantId"]);
       this.clientId = configuration["AzureAd:ClientId"];
       this.clientSecret = configuration["AzureAd:ClientSecret"];
+
       this.workspaceId = Guid.Parse(configuration["PowerBi:workspaceId"]);
       this.reportId = Guid.Parse(configuration["PowerBi:reportId"]);
 
       this.powerbiServiceApiRoot = configuration["PowerBi:PowerBiServiceApiRoot"];
       this.powerBiServiceApiResourceId = configuration["PowerBi:PowerBiServiceApiResourceId"];
       this.powerbiDefaultScope = new string[] { this.powerBiServiceApiResourceId + "/.default" };
-
     }
 
     public string GetAppOnlyAccessToken() {
@@ -50,7 +51,6 @@ namespace AppOwnsData.Services {
 
     }
 
-
     public PowerBIClient GetPowerBiClient() {
       var tokenCredentials = new TokenCredentials(GetAppOnlyAccessToken(), "Bearer");
       return new PowerBIClient(new Uri(powerbiServiceApiRoot), tokenCredentials);
@@ -61,19 +61,67 @@ namespace AppOwnsData.Services {
       PowerBIClient pbiClient = GetPowerBiClient();
 
       var report = await pbiClient.Reports.GetReportInGroupAsync(workspaceId, reportId);
+      var datasetId = report.DatasetId;
 
-      // create token request object
-      GenerateTokenRequest generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "View");
 
-      // call to Power BI Service API and pass GenerateTokenRequest object to generate embed token
-      string embedToken = pbiClient.Reports.GenerateTokenInGroup(workspaceId, report.Id,
-                                                                 generateTokenRequestParameters).Token;
+      IList<GenerateTokenRequestV2Dataset> datasetRequests = new List<GenerateTokenRequestV2Dataset>();
+      datasetRequests.Add(new GenerateTokenRequestV2Dataset(datasetId));
+
+      IList<GenerateTokenRequestV2Report> reportRequests = new List<GenerateTokenRequestV2Report>();
+      reportRequests.Add(new GenerateTokenRequestV2Report(reportId, allowEdit: true));
+
+      GenerateTokenRequestV2 tokenRequest =
+        new GenerateTokenRequestV2 {
+          Datasets = datasetRequests,
+          Reports = reportRequests
+        };
+
+      var embedTokenResponse = pbiClient.EmbedToken.GenerateToken(tokenRequest);
 
       // return report embedding data to caller
       return new ReportEmbedData {
         ReportId = reportId.ToString(),
         EmbedUrl = report.EmbedUrl,
-        Token = embedToken
+        Token = embedTokenResponse.Token
+      };
+    }
+
+    public async Task<ReportEmbedData> GetReportEmbeddingDataWithRls(string UserName, string RlsRole, string CustomData = "") {
+
+      PowerBIClient pbiClient = GetPowerBiClient();
+
+      var report = await pbiClient.Reports.GetReportInGroupAsync(workspaceId, reportId);
+      var datasetId = report.DatasetId;
+
+
+      IList<GenerateTokenRequestV2Dataset> datasetRequests = new List<GenerateTokenRequestV2Dataset>();
+      datasetRequests.Add(new GenerateTokenRequestV2Dataset(datasetId));
+
+      IList<GenerateTokenRequestV2Report> reportRequests = new List<GenerateTokenRequestV2Report>();
+      reportRequests.Add(new GenerateTokenRequestV2Report(reportId, allowEdit: true));
+
+      var datasetList = new List<string>() { report.DatasetId };
+      var rlsRoles = new string[] { RlsRole };
+
+      IList<EffectiveIdentity> effectiveIdentities =
+        new List<EffectiveIdentity> {
+          new EffectiveIdentity(UserName, datasets:datasetList, roles: rlsRoles, customData: CustomData ) };
+
+
+      GenerateTokenRequestV2 tokenRequest =
+        new GenerateTokenRequestV2 {
+          Datasets = datasetRequests,
+          Reports = reportRequests,
+          Identities = effectiveIdentities
+        };
+
+      var embedTokenResponse = pbiClient.EmbedToken.GenerateToken(tokenRequest);
+
+      // return report embedding data to caller
+      return new ReportEmbedData {
+        ReportId = reportId.ToString(),
+        EmbedUrl = report.EmbedUrl,
+        Token = embedTokenResponse.Token
       };
     }
 
