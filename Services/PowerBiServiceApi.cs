@@ -48,7 +48,6 @@ namespace AppOwnsData.Services {
 
       var authResult = appConfidential.AcquireTokenForClient(powerbiDefaultScope).ExecuteAsync().Result;
       return authResult.AccessToken;
-
     }
 
     public PowerBIClient GetPowerBiClient() {
@@ -62,7 +61,6 @@ namespace AppOwnsData.Services {
 
       var report = await pbiClient.Reports.GetReportInGroupAsync(workspaceId, reportId);
       var datasetId = report.DatasetId;
-
 
       IList<GenerateTokenRequestV2Dataset> datasetRequests = new List<GenerateTokenRequestV2Dataset>();
       datasetRequests.Add(new GenerateTokenRequestV2Dataset(datasetId));
@@ -93,7 +91,6 @@ namespace AppOwnsData.Services {
       var report = await pbiClient.Reports.GetReportInGroupAsync(workspaceId, reportId);
       var datasetId = report.DatasetId;
 
-
       IList<GenerateTokenRequestV2Dataset> datasetRequests = new List<GenerateTokenRequestV2Dataset>();
       datasetRequests.Add(new GenerateTokenRequestV2Dataset(datasetId));
 
@@ -106,7 +103,6 @@ namespace AppOwnsData.Services {
       IList<EffectiveIdentity> effectiveIdentities =
         new List<EffectiveIdentity> {
           new EffectiveIdentity(UserName, datasets:datasetList, roles: rlsRoles, customData: CustomData ) };
-
 
       GenerateTokenRequestV2 tokenRequest =
         new GenerateTokenRequestV2 {
